@@ -1,0 +1,69 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using y.Services;
+@using Newtonsoft.Json;
+@using y.Models;
+@using Microsoft.Extensions.Configuration;
+@using Microsoft.Extensions.DependencyInjection;
+@using Microsoft.Extensions.Logging;
+
+@{
+    Layout = null;
+    var configuration = ViewContext.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+    var newsService = new NewsServices(configuration);
+    NewsResponse newsModel = null;
+    var query = ViewBag.Query;
+    int page = 1;  
+    List<Article> current = new List<Article>(); 
+    try
+    {  
+        if (ViewBag.Page!=null&&Int32.Parse(ViewBag.Page) > 0) page = Int32.Parse(ViewBag.Page);
+        var newsResponse = await newsService.GetTopHeadlinesAsync(query);
+        newsModel = JsonConvert.DeserializeObject<NewsResponse>(newsResponse);
+         
+        if (newsModel != null && newsModel.Articles != null)
+        { 
+            for (int i = 2*(page - 1); i < 2*(page); i++)  
+            {
+                if (i >= 0 && i < newsModel.Articles.Count)
+                {
+                    current.Add(newsModel.Articles[i]);
+                }
+            }
+        }
+    }
+    catch (Exception ex)
+    {  
+    }
+} 
+ 
+
+<ul>
+    @foreach (var article in current)
+    { 
+    <li>
+            <article class="box post post-excerpt">
+                <header>
+                    <h2><a href="#">@article.Title</a></h2>
+                    <p>@article.Description</p>
+                </header>
+                <div class="info">
+                    <span class="date"><span class="month">@article.PublishedAt.ToString("MMM")<span>y</span></span> <span class="day">@article.PublishedAt.Day.ToString()</span></span>
+                    <span class="month">@article.PublishedAt.Year.ToString() ,  @article.PublishedAt.ToString("hh tt")</span>
+                </div>
+                <a href="#" class="image featured"><img src="@article.Image" alt="" /></a>
+                <p>@article.Content</p>
+                <a href="@article.Url"  >Read more</a>
+            </article>
+        </li>
+    }
+</ul>
+<div class="pagination"> 
+    <div class="pages">
+        @for (int i = 1; i <= 10 / 2; i++){
+            var isActive = i == page ? "active" : ""; 
+            <a href="?query=@query&page=@i" class="@isActive">@i</a>
+        }
+    </div>
+    <a href="?query=@query&page=@(page + 1)" class="button next">Next Page</a>
+</div>

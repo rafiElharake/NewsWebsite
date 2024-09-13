@@ -1,0 +1,13 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem<Umbraco.Cms.Web.Common.PublishedModels.SearchBox>>
+
+@using Umbraco.Extensions
+@using Umbraco.Cms.Web.Common.PublishedModels
+@using Umbraco.Cms.Web.Common.Views
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+<section class="box search">
+    <form method="get" action="https://localhost:44310">
+        <input type="text" class="text" name="query" placeholder="@Model.Content.Search" />
+        <button type="submit" style="margin:3% 3% 3% 0%; justify-self:center;">Search</button>
+    </form>
+</section>
