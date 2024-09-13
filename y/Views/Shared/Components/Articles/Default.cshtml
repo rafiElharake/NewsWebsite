@@ -1,0 +1,43 @@
+﻿@model List<Article>
+@using y.Models
+<ul>
+    @foreach (var article in Model)
+    {
+        <li>
+            <article class="box post post-excerpt">
+                <header>
+                    <h2><a href="#">@article.Title</a></h2>
+                    <p>@article.Description</p>
+                </header>
+                <div class="info">
+                    <span class="date"><span class="month">@article.PublishedAt.ToString("MMM")<span>y</span></span> <span class="day">@article.PublishedAt.Day.ToString()</span></span>
+                    <span class="month">@article.PublishedAt.Year.ToString(), @article.PublishedAt.ToString("hh tt")</span>
+                </div>
+                <a href="#" class="image featured"><img src="@article.Image" alt="" /></a>
+                <p>@article.Content</p>
+                <a href="@article.Url">Read more</a>
+            </article>
+        </li>
+    }
+</ul>
+<div class="pagination">
+    <div class="pages">
+        @for (int i = 1; i <= 10 / 2; i++)
+        {
+            int page;
+            if (!int.TryParse(ViewBag.Page as string, out page))
+            {
+                page = 1;
+            }
+            var isActive = i == page ? "active" : "";
+            string q = "tech";
+            if(ViewBag.Query != null)
+            {
+                q = ViewBag.Query;
+            }
+
+            <a href="?query=@q&page=@i" class="@isActive">@i</a>
+        }
+    </div>
+    <a href="?query=@ViewBag.Query&page=@(ViewBag.Page + 1)" class="button next">Next Page</a>
+</div>
