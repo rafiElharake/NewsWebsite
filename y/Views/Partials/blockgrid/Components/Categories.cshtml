@@ -6,6 +6,7 @@
 @using Umbraco.Cms.Core.Models.Blocks
 @using Umbraco.Cms.Core.Models.PublishedContent
 
+@* rendering news categories *@
 <nav id="nav">
 	<ul>
 @await Html.GetBlockGridItemAreaHtmlAsync(Model.Areas.FirstOrDefault())

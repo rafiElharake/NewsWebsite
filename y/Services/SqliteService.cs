@@ -2,6 +2,7 @@
 using System.Data;
 using y.Models;
 using Newtonsoft.Json;
+using Umbraco.Cms.Core.Security;
 
 namespace y.Services
 {
@@ -11,28 +12,9 @@ namespace y.Services
 
         public SQLiteService(IDbConnection dbConnection)
         {
-            _dbConnection = dbConnection;
+            _dbConnection = dbConnection; 
         }
-        public async Task SaveUserAsync(Users users)
-        {
-            var query = "INSERT INTO Users (Username) VALUES (@Username)";
-            await _dbConnection.ExecuteAsync(query, new
-            {
-                users.Username, 
-            });
-        }
-        public async Task<bool> UsernameExistsAsync(string username)
-        {
-            var query = "SELECT COUNT(1) FROM Users WHERE Username = @Username";
-            var result = await _dbConnection.ExecuteScalarAsync<int>(query, new { Username = username });
-            return result > 0;
-        }
-        public async Task<Users> GetUserByUsernameAsync(string username)
-        {
-            var query = "SELECT * FROM Users WHERE Username = @Username";
-            var user = await _dbConnection.QueryFirstOrDefaultAsync<Users>(query, new { Username = username });
-            return user;
-        }
+ 
         public async Task AddFavoriteArticleAsync(int userId, string articleUrl, string title)
         {  
             var command = _dbConnection.CreateCommand();
@@ -44,10 +26,19 @@ namespace y.Services
                 title
             });
         }
-        public async Task<string> GetSavedArticlesAsync(string username)
+        public async Task RemoveFavoriteArticleAsync(string articleUrl)
         {
-            var user = await GetUserByUsernameAsync(username);   
-            var userId = user.UserId;  
+            var command = _dbConnection.CreateCommand();
+            command.CommandText = "DELETE FROM SavedArticles WHERE ArticleUrl = @articleUrl";
+
+            await _dbConnection.ExecuteAsync(command.CommandText, new
+            {
+                articleUrl
+            });
+        }
+        public async Task<string> GetSavedArticlesAsync(MemberIdentityUser user)
+        { 
+            var userId = user.Id;  
             var query = "SELECT ArticleUrl AS Url, Title FROM SavedArticles WHERE UserId = @UserId";
               var articles = await _dbConnection.QueryAsync<Article>(query, new { UserId = userId });
               foreach (var article in articles)
@@ -59,7 +50,7 @@ namespace y.Services
                 article.PublishedAt = default(DateTime);
                 article.Content = string.Empty;
             } 
-            var resultObject = new { Username = username, Articles = articles }; 
+            var resultObject = new { Username = user.UserName, Articles = articles }; 
             var jsonResult = JsonConvert.SerializeObject(resultObject, Formatting.Indented);
              return jsonResult;
         }

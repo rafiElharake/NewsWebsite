@@ -1,4 +1,5 @@
-﻿using y.Models;
+﻿using Umbraco.Cms.Core.Security;
+using y.Models;
 using y.Services;
 namespace y.Services
 {
@@ -14,7 +15,7 @@ namespace y.Services
             _configuration = configuration; 
             _sqliteService = sqliteService;
         } 
-        public async Task<string> GetTopHeadlinesAsync(string query, string username)
+        public async Task<string> GetTopHeadlinesAsync(string query, MemberIdentityUser user)
         {
             if (query != "saved") {
             var apiKey = _configuration["ApiSettings:NewsApiKey"];
@@ -45,7 +46,7 @@ namespace y.Services
             }
             else
             { 
-               var responseString = await _sqliteService.GetSavedArticlesAsync(username);
+               var responseString = await _sqliteService.GetSavedArticlesAsync(user);
                 return responseString;
             } 
         }

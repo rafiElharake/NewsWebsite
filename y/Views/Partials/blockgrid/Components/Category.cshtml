@@ -9,4 +9,6 @@
 @{
     var query = @Model.Content.CategoryName;
 }
+
+@* rendering categories and using the selected category as a query*@
 <li class="current"><a href="?query=@query&page=1">@query</a></li>

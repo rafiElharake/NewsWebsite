@@ -11,11 +11,12 @@
 @using System.Threading.Tasks; 
 @using Umbraco.Cms.Core.Models.Membership;
 @using Microsoft.AspNetCore.Http;
-
+@using Umbraco.Cms.Core.Security;
+@inject IMemberManager _memberManager;
 @{
     Layout = null; 
-	var username = Context.Session.GetString("Username");
-	bool logged = !string.IsNullOrEmpty(username);
+	var user = await _memberManager.GetCurrentMemberAsync();
+	bool logged = !string.IsNullOrEmpty(user?.UserName);
 }  
 <!DOCTYPE HTML>
 <html>
@@ -35,10 +36,9 @@
 	<div id="sidebar">
 		@if (logged)
 		{
-			<h1>Signed in as @username</h1>
-			<form asp-controller="Account" asp-action="Logout" method="post">
-    <button type="submit">Logout</button>
-</form>
+			<h1>Signed in as @user.Name</h1>
+			@await Html.PartialAsync("partials/loginStatusu")
+
 		}
 		else
 		{

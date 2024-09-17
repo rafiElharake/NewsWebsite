@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Umbraco.Cms.Core.Security;
 using y.Models;
 using y.Services;
 
@@ -16,13 +17,13 @@ public class ArticlesViewComponent : ViewComponent
         _newsService = newsService;
         _sqliteService = sqliteService;
     } 
-    public async Task<IViewComponentResult> InvokeAsync(string query, int page, string username)
+    public async Task<IViewComponentResult> InvokeAsync(string query, int page, MemberIdentityUser user)
     {
         NewsResponse newsModel = null;
         List<Article> current = new List<Article>(); 
         try
         {
-            var newsResponse = await _newsService.GetTopHeadlinesAsync(query, username);
+            var newsResponse = await _newsService.GetTopHeadlinesAsync(query, user);
             newsModel = JsonConvert.DeserializeObject<NewsResponse>(newsResponse);
 
             if (newsModel != null && newsModel.Articles != null)

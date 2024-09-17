@@ -17,7 +17,10 @@
 <body class="is-preload">
     <div id="content">
         <div class="inner">
-            @await Html.GetBlockGridHtmlAsync(Model, "form") 
+
+            @* render login and register partials from starter kit *@
+            @await Html.PartialAsync("partials/registeru")
+            @await Html.PartialAsync("partials/loginu")
         </div>
     </div>
     <!-- Sidebar -->

@@ -1,5 +1,8 @@
 ﻿@model List<Article>
 @using y.Models
+@{
+    var query = Context.Request.Query["query"].ToString();
+}
 <ul>
     @foreach (var article in Model)
     {
@@ -8,14 +11,26 @@
                 <header>
                     <h2><a href="#">@article.Title</a>  </h2>
                     <p>@article.Description</p>
-                    <form asp-action="AddFavoriteArticle" asp-controller="Account" method="post">
-                        <input type="hidden" name="articleUrl" value="@article.Url" />
-                        <input type="hidden" name="title" value="@article.Title" />
 
-                        <button type="submit">Add to Favorites</button>
-                    </form>
+                    @* render add or remove fav article and call controller from the form *@
+                    @if (!string.Equals(query, "saved", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <form asp-action="AddFavoriteArticle" asp-controller="Account" method="post">
+                            <input type="hidden" name="articleUrl" value="@article.Url" />
+                            <input type="hidden" name="title" value="@article.Title" />
+                            <button type="submit" style="margin:2%;">Add to Favorites</button>
+                        </form>
+                    }
+                        else
+                    {
+                        <form asp-action="RemoveFavoriteArticle" asp-controller="Account" method="post">
+                            <input type="hidden" name="articleUrl" value="@article.Url" /> 
+                        <button type="submit" style="margin:2%;">Remove from Favorites</button>
+                        </form>
+                    }
                 </header>
-                
+
+                @* displaying the articles *@
                 <div class="info">
                     <span class="date"><span class="month">@article.PublishedAt.ToString("MMM")<span>y</span></span> <span class="day">@article.PublishedAt.Day.ToString()</span></span>
                     <span class="month">@article.PublishedAt.Year.ToString(), @article.PublishedAt.ToString("hh tt")</span>
@@ -38,7 +53,7 @@
             }
             var isActive = i == page ? "active" : "";
             string q = "tech";
-            if(ViewBag.Query != null)
+            if (ViewBag.Query != null)
             {
                 q = ViewBag.Query;
             }

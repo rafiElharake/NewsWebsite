@@ -4,7 +4,10 @@ using System.Data.SQLite;
 using Microsoft.Data.Sqlite; 
 using Microsoft.EntityFrameworkCore;
 using y;
-using Microsoft.AspNetCore.Identity;  
+using Microsoft.AspNetCore.Identity;
+using Umbraco.Cms.Core.Security;
+ 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure logging
@@ -20,9 +23,8 @@ builder.CreateUmbracoBuilder()
     .Build();
  
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<NewsServices>(); 
-
-
+builder.Services.AddScoped<NewsServices>();
+ 
 var sqliteConnection = new SqliteConnection("Data Source=Umbraco.sqlite.db");
 builder.Services.AddSingleton(new SQLiteService(sqliteConnection));
 
