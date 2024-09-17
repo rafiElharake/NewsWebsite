@@ -6,10 +6,16 @@
 @using y.Models;
 @using Microsoft.Extensions.Configuration;
 @using Microsoft.Extensions.DependencyInjection;
-@using Microsoft.Extensions.Logging;
+@using Microsoft.Extensions.Logging; 
+@using Microsoft.AspNetCore.Mvc; 
+@using System.Threading.Tasks; 
+@using Umbraco.Cms.Core.Models.Membership;
+@using Microsoft.AspNetCore.Http;
 
 @{
     Layout = null; 
+	var username = Context.Session.GetString("Username");
+	bool logged = !string.IsNullOrEmpty(username);
 }  
 <!DOCTYPE HTML>
 <html>
@@ -21,19 +27,29 @@
 </head>
 <body class="is-preload"> 
 	<div id="content">
-		<div class="inner"> 
+		<div class="inner">
 			@await Html.PartialAsync("Articles.cshtml") 
 		</div>
 	</div> 
 	<!-- Sidebar -->
 	<div id="sidebar">
+		@if (logged)
+		{
+			<h1>Signed in as @username</h1>
+			<form asp-controller="Account" asp-action="Logout" method="post">
+    <button type="submit">Logout</button>
+</form>
+		}
+		else
+		{
+			<h1>Not signed in</h1><a href="/login">Sign in</a>
+		}
 		@await Html.GetBlockGridHtmlAsync(Model, "side") 
 		<!-- Copyright -->
 		<ul id="copyright">
 			<li>&copy; Untitled.</li>
 			<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-		</ul>
-
+		</ul> 
 	</div>
 
 	<!-- Scripts -->

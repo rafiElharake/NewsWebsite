@@ -8,21 +8,21 @@ using y.Services;
 
 public class ArticlesViewComponent : ViewComponent
 {
-    private readonly NewsServices _newsService;
-
-    public ArticlesViewComponent(NewsServices newsService)
+    private readonly NewsServices _newsService; 
+    private readonly SQLiteService _sqliteService;
+    
+    public ArticlesViewComponent(NewsServices newsService, SQLiteService sqliteService)
     {
         _newsService = newsService;
-    }
-
-    public async Task<IViewComponentResult> InvokeAsync(string query, int page)
+        _sqliteService = sqliteService;
+    } 
+    public async Task<IViewComponentResult> InvokeAsync(string query, int page, string username)
     {
         NewsResponse newsModel = null;
-        List<Article> current = new List<Article>();
-
+        List<Article> current = new List<Article>(); 
         try
         {
-            var newsResponse = await _newsService.GetTopHeadlinesAsync(query);
+            var newsResponse = await _newsService.GetTopHeadlinesAsync(query, username);
             newsModel = JsonConvert.DeserializeObject<NewsResponse>(newsResponse);
 
             if (newsModel != null && newsModel.Articles != null)
@@ -37,8 +37,7 @@ public class ArticlesViewComponent : ViewComponent
             }
         }
         catch (Exception ex)
-        {
-            // Handle exception
+        { 
         }
 
         return View(current);

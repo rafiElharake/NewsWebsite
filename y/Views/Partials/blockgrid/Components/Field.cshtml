@@ -1,0 +1,14 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem<Umbraco.Cms.Web.Common.PublishedModels.Field>>
+@using y.Services
+@using Umbraco.Extensions
+@using Umbraco.Cms.Web.Common.PublishedModels
+@using Umbraco.Cms.Web.Common.Views
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+
+@{
+    var name = @Model.Content.FieldName;
+}
+<div style="display:flex">
+    <input type="text" class="text" name="username" placeholder="@name" />
+</div>

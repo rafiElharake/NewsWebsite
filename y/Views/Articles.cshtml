@@ -6,15 +6,17 @@
 @using Microsoft.Extensions.Configuration;
 @using Microsoft.Extensions.DependencyInjection;
 @using Microsoft.Extensions.Logging;
-
+@using Microsoft.AspNetCore.Http;
 @{
     Layout = null;
     var query = ViewBag.Query;
     int page;
+    var username = Context.Session.GetString("Username");
+
     if (!int.TryParse(ViewBag.Page as string, out page))
     {
         page = 1;
     }
 }
 
-@await Component.InvokeAsync("Articles", new { query = query, page = page })
+@await Component.InvokeAsync("Articles", new { query = query, page = page, username=username })

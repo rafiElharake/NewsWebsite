@@ -6,9 +6,16 @@
         <li>
             <article class="box post post-excerpt">
                 <header>
-                    <h2><a href="#">@article.Title</a></h2>
+                    <h2><a href="#">@article.Title</a>  </h2>
                     <p>@article.Description</p>
+                    <form asp-action="AddFavoriteArticle" asp-controller="Account" method="post">
+                        <input type="hidden" name="articleUrl" value="@article.Url" />
+                        <input type="hidden" name="title" value="@article.Title" />
+
+                        <button type="submit">Add to Favorites</button>
+                    </form>
                 </header>
+                
                 <div class="info">
                     <span class="date"><span class="month">@article.PublishedAt.ToString("MMM")<span>y</span></span> <span class="day">@article.PublishedAt.Day.ToString()</span></span>
                     <span class="month">@article.PublishedAt.Year.ToString(), @article.PublishedAt.ToString("hh tt")</span>
@@ -39,5 +46,5 @@
             <a href="?query=@q&page=@i" class="@isActive">@i</a>
         }
     </div>
-    <a href="?query=@ViewBag.Query&page=@(ViewBag.Page + 1)" class="button next">Next Page</a>
+    <a href="?query=@ViewBag.Query&page=@(Convert.ToInt32(ViewBag.Page) + 1)" class="button next">Next Page</a>
 </div>
