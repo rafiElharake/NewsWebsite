@@ -1,4 +1,7 @@
-﻿using Umbraco.Cms.Core.Security;
+﻿using Newtonsoft.Json;
+using Umbraco.Cms.Core.Security;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Web.Common.Security;
 using y.Models;
 using y.Services;
 namespace y.Services
@@ -7,19 +10,16 @@ namespace y.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
-        private readonly SQLiteService _sqliteService;
 
-        public NewsServices(IConfiguration configuration, SQLiteService sqliteService)
+        public NewsServices(IConfiguration configuration)
         {
             _httpClient = new HttpClient();
             _configuration = configuration; 
-            _sqliteService = sqliteService;
         } 
-        public async Task<string> GetTopHeadlinesAsync(string query, MemberIdentityUser user)
+        public async Task<string> GetTopHeadlinesAsync(string query, MemberIdentityUser user, IContentService _contentService)
         {
             if (query != "saved") {
             var apiKey = _configuration["ApiSettings:NewsApiKey"];
-            System.Diagnostics.Debug.WriteLine("b");
             if (query == null) { query = "tech"; }
             if (string.IsNullOrEmpty(apiKey))
             {
@@ -36,8 +36,7 @@ namespace y.Services
                     throw new HttpRequestException($"Error fetching top headlines: {response.StatusCode} - {responseContent}");
                 } 
                 var responseString = await response.Content.ReadAsStringAsync();
-                
-                return responseString;
+                    return responseString; 
             }
             catch (HttpRequestException ex)
             {
@@ -46,9 +45,28 @@ namespace y.Services
             }
             else
             { 
-               var responseString = await _sqliteService.GetSavedArticlesAsync(user);
-                return responseString;
+                if (user != null)
+                {
+                    var userId = user.Id.ToString();
+                    var parentArticlesNode = _contentService.GetById(1184);
+                    if (parentArticlesNode != null)
+                    {
+                        var articles = _contentService.GetPagedChildren(parentArticlesNode.Id, 0, 100, out var totalRecords)
+                                        .Where(x => x.ContentType.Alias == "article" &&
+                                                    x.GetValue<string>("userId") == userId)
+                                        .Select(x => new Article
+                                        {
+                                            Url = x.GetValue<string>("uri"),
+                                            Title = x.GetValue<string>("title")
+                                        }).ToList();
+                        var resultObject = new { Username = user.UserName, Articles = articles };
+                        return JsonConvert.SerializeObject(resultObject, Formatting.Indented);
+                    }
+                }
+
+                return "";
+
             } 
         }
     }
-}
+} 

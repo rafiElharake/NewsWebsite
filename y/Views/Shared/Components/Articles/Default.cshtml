@@ -2,6 +2,8 @@
 @using y.Models
 @{
     var query = Context.Request.Query["query"].ToString();
+    int cnt = cnt = Convert.ToInt32(ViewData["TotalArticles"]);
+
 }
 <ul>
     @foreach (var article in Model)
@@ -44,7 +46,7 @@
 </ul>
 <div class="pagination">
     <div class="pages">
-        @for (int i = 1; i <= 10 / 2; i++)
+        @for (int i = 1; i <= cnt / 2; i++)
         {
             int page;
             if (!int.TryParse(ViewBag.Page as string, out page))

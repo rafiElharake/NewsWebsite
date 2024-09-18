@@ -1,7 +1,5 @@
 using System.Data;
-using y.Services;
-using System.Data.SQLite;
-using Microsoft.Data.Sqlite; 
+using y.Services; 
 using Microsoft.EntityFrameworkCore;
 using y;
 using Microsoft.AspNetCore.Identity;
@@ -24,14 +22,7 @@ builder.CreateUmbracoBuilder()
  
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<NewsServices>();
- 
-var sqliteConnection = new SqliteConnection("Data Source=Umbraco.sqlite.db");
-builder.Services.AddSingleton(new SQLiteService(sqliteConnection));
 
-builder.Services.AddScoped<IDbConnection>(sp =>
-{
-    return new SqliteConnection("Data Source=Umbraco.sqlite.db");
-});
 
 var app = builder.Build();
 

@@ -4,26 +4,25 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Umbraco.Cms.Core.Security;
+using Umbraco.Cms.Core.Services;
 using y.Models;
 using y.Services;
 
 public class ArticlesViewComponent : ViewComponent
 {
     private readonly NewsServices _newsService; 
-    private readonly SQLiteService _sqliteService;
     
-    public ArticlesViewComponent(NewsServices newsService, SQLiteService sqliteService)
+    public ArticlesViewComponent(NewsServices newsService)
     {
         _newsService = newsService;
-        _sqliteService = sqliteService;
     } 
-    public async Task<IViewComponentResult> InvokeAsync(string query, int page, MemberIdentityUser user)
+    public async Task<IViewComponentResult> InvokeAsync(string query, int page, MemberIdentityUser user, IContentService _contentService)
     {
         NewsResponse newsModel = null;
         List<Article> current = new List<Article>(); 
         try
         {
-            var newsResponse = await _newsService.GetTopHeadlinesAsync(query, user);
+            var newsResponse = await _newsService.GetTopHeadlinesAsync(query, user, _contentService);
             newsModel = JsonConvert.DeserializeObject<NewsResponse>(newsResponse);
 
             if (newsModel != null && newsModel.Articles != null)
@@ -40,7 +39,7 @@ public class ArticlesViewComponent : ViewComponent
         catch (Exception ex)
         { 
         }
-
+        ViewData["TotalArticles"] = newsModel?.Articles?.Count ?? 0;
         return View(current);
     }
 }

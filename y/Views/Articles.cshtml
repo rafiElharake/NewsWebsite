@@ -7,13 +7,16 @@
 @using Microsoft.Extensions.DependencyInjection;
 @using Microsoft.Extensions.Logging;
 @using Microsoft.AspNetCore.Http;
-@using Umbraco.Cms.Core.Security;
+@using Umbraco.Cms.Core.Security; 
+@using Umbraco.Cms.Core.Services;
 @inject IMemberManager _memberManager;
+@inject IContentService _contentService;
 @{
     Layout = null;
     var query = ViewBag.Query;
     int page;
-    var user = await _memberManager.GetCurrentMemberAsync();  
+    var user = await _memberManager.GetCurrentMemberAsync(); 
+  
 
     if (!int.TryParse(ViewBag.Page as string, out page))
     {
@@ -21,4 +24,4 @@
     }
 }
 @* rendering articles using a viewcomponent*@
-@await Component.InvokeAsync("Articles", new { query = query, page = page, user=user })
+@await Component.InvokeAsync("Articles", new { query = query, page = page, user = user, _contentService = _contentService })

@@ -1,6 +1,4 @@
-﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
-
-
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage 
 @using Umbraco.Cms.Web.Common.Models
 @using Umbraco.Cms.Web.Common.Security
 @using Umbraco.Cms.Web.Website.Controllers
@@ -20,16 +18,14 @@
 
 
 @if (ViewData.TryGetTwoFactorProviderNames(out var providerNames))
-{
-
+{ 
     foreach (var providerName in providerNames)
     {
         <div class="2fa-form">
             <h4>Two factor with @providerName.</h4>
             <div asp-validation-summary="All" class="text-danger"></div>
             @using (Html.BeginUmbracoForm<UmbTwoFactorLoginController>(nameof(UmbTwoFactorLoginController.Verify2FACode)))
-            {
-
+            { 
                 <text>
                     <input type="hidden" name="provider" value="@providerName"/>
                     Input security code: <input name="code" value=""/><br/>
@@ -38,13 +34,10 @@
                 </text>
             }
         </div>
-    }
-
+    } 
 }
 else
-{
-
-
+{ 
 <div class="login-form">
 
     @using (Html.BeginUmbracoForm<UmbLoginController>(
