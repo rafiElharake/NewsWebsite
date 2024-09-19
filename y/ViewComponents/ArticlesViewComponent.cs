@@ -36,7 +36,7 @@ public class ArticlesViewComponent : ViewComponent
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         { 
         }
         ViewData["TotalArticles"] = newsModel?.Articles?.Count ?? 0;

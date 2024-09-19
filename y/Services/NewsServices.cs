@@ -14,37 +14,39 @@ namespace y.Services
         public NewsServices(IConfiguration configuration)
         {
             _httpClient = new HttpClient();
-            _configuration = configuration; 
-        } 
+            _configuration = configuration;
+        }
         public async Task<string> GetTopHeadlinesAsync(string query, MemberIdentityUser user, IContentService _contentService)
         {
-            if (query != "saved") {
-            var apiKey = _configuration["ApiSettings:NewsApiKey"];
-            if (query == null) { query = "tech"; }
-            if (string.IsNullOrEmpty(apiKey))
+            if (query != "saved")
             {
-                throw new InvalidOperationException("API key is missing or empty.");
-            } 
-            var requestUri = $"https://gnews.io/api/v4/search?q={query}&lang=en&country=us&max=10&apikey={apiKey}";
-           try
-            {
-                var response = await _httpClient.GetAsync(requestUri);
-
-                if (!response.IsSuccessStatusCode)
+                var siteConfigNode = _contentService.GetRootContent().FirstOrDefault(x => x.ContentType.Alias == "siteConfiguration"); 
+                var apiKey = siteConfigNode?.GetValue<string>("ApiKey");
+                if (query == null) { query = "tech"; }
+                if (string.IsNullOrEmpty(apiKey))
                 {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    throw new HttpRequestException($"Error fetching top headlines: {response.StatusCode} - {responseContent}");
-                } 
-                var responseString = await response.Content.ReadAsStringAsync();
-                    return responseString; 
-            }
-            catch (HttpRequestException ex)
-            {
-                throw;
-            }
+                    throw new InvalidOperationException("API key is missing or empty.");
+                }
+                var requestUri = $"https://gnews.io/api/v4/search?q={query}&lang=en&country=us&max=15&apikey={apiKey}";
+                try
+                {
+                    var response = await _httpClient.GetAsync(requestUri);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        throw new HttpRequestException($"Error fetching top headlines: {response.StatusCode} - {responseContent}");
+                    }
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    return responseString;
+                }
+                catch (HttpRequestException)
+                {
+                    throw;
+                }
             }
             else
-            { 
+            {
                 if (user != null)
                 {
                     var userId = user.Id.ToString();
@@ -56,8 +58,8 @@ namespace y.Services
                                                     x.GetValue<string>("userId") == userId)
                                         .Select(x => new Article
                                         {
-                                            Url = x.GetValue<string>("uri"),
-                                            Title = x.GetValue<string>("title")
+                                            Url = x.GetValue<string>("uri") ?? string.Empty,
+                                            Title = x.GetValue<string>("title") ?? string.Empty
                                         }).ToList();
                         var resultObject = new { Username = user.UserName, Articles = articles };
                         return JsonConvert.SerializeObject(resultObject, Formatting.Indented);
@@ -66,7 +68,7 @@ namespace y.Services
 
                 return "";
 
-            } 
+            }
         }
     }
-} 
+}

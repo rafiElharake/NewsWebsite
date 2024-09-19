@@ -18,14 +18,14 @@ using Umbraco.Extensions;
 
 namespace Umbraco.Cms.Web.Common.PublishedModels
 {
-	/// <summary>Page</summary>
-	[PublishedModel("page")]
-	public partial class Page : PublishedContentModel, ISeo
+	/// <summary>Feature</summary>
+	[PublishedModel("feature")]
+	public partial class Feature : PublishedElementModel
 	{
 		// helpers
 #pragma warning disable 0109 // new is redundant
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
-		public new const string ModelTypeAlias = "page";
+		public new const string ModelTypeAlias = "feature";
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
 		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
@@ -34,14 +34,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 			=> PublishedModelUtility.GetModelContentType(publishedSnapshotAccessor, ModelItemType, ModelTypeAlias);
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
 		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<Page, TValue>> selector)
+		public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<Feature, TValue>> selector)
 			=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(publishedSnapshotAccessor), selector);
 #pragma warning restore 0109
 
 		private IPublishedValueFallback _publishedValueFallback;
 
 		// ctor
-		public Page(IPublishedContent content, IPublishedValueFallback publishedValueFallback)
+		public Feature(IPublishedElement content, IPublishedValueFallback publishedValueFallback)
 			: base(content, publishedValueFallback)
 		{
 			_publishedValueFallback = publishedValueFallback;
@@ -50,41 +50,19 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
-		/// Side
+		/// Details
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("side")]
-		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel Side => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel>(_publishedValueFallback, "side");
+		[ImplementPropertyType("featureDetails")]
+		public virtual string FeatureDetails => this.Value<string>(_publishedValueFallback, "featureDetails");
 
 		///<summary>
-		/// Is Followable
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
-		[ImplementPropertyType("isFollowable")]
-		public virtual bool IsFollowable => global::Umbraco.Cms.Web.Common.PublishedModels.Seo.GetIsFollowable(this, _publishedValueFallback);
-
-		///<summary>
-		/// Is Indexable
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
-		[ImplementPropertyType("isIndexable")]
-		public virtual bool IsIndexable => global::Umbraco.Cms.Web.Common.PublishedModels.Seo.GetIsIndexable(this, _publishedValueFallback);
-
-		///<summary>
-		/// Meta Description
+		/// Name
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("metaDescription")]
-		public virtual string MetaDescription => global::Umbraco.Cms.Web.Common.PublishedModels.Seo.GetMetaDescription(this, _publishedValueFallback);
-
-		///<summary>
-		/// Meta Title
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("metaTitle")]
-		public virtual string MetaTitle => global::Umbraco.Cms.Web.Common.PublishedModels.Seo.GetMetaTitle(this, _publishedValueFallback);
+		[ImplementPropertyType("featureName")]
+		public virtual string FeatureName => this.Value<string>(_publishedValueFallback, "featureName");
 	}
 }

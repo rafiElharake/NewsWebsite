@@ -18,14 +18,29 @@ using Umbraco.Extensions;
 
 namespace Umbraco.Cms.Web.Common.PublishedModels
 {
-	/// <summary>Page</summary>
-	[PublishedModel("page")]
-	public partial class Page : PublishedContentModel, ISeo
+	// Mixin Content Type with alias "contentBase"
+	/// <summary>Content Base</summary>
+	public partial interface IContentBase : IPublishedContent
+	{
+		/// <summary>Content</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel BodyText { get; }
+
+		/// <summary>Page Title</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		string PageTitle { get; }
+	}
+
+	/// <summary>Content Base</summary>
+	[PublishedModel("contentBase")]
+	public partial class ContentBase : PublishedContentModel, IContentBase
 	{
 		// helpers
 #pragma warning disable 0109 // new is redundant
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
-		public new const string ModelTypeAlias = "page";
+		public new const string ModelTypeAlias = "contentBase";
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
 		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
@@ -34,14 +49,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 			=> PublishedModelUtility.GetModelContentType(publishedSnapshotAccessor, ModelItemType, ModelTypeAlias);
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
 		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<Page, TValue>> selector)
+		public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<ContentBase, TValue>> selector)
 			=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(publishedSnapshotAccessor), selector);
 #pragma warning restore 0109
 
 		private IPublishedValueFallback _publishedValueFallback;
 
 		// ctor
-		public Page(IPublishedContent content, IPublishedValueFallback publishedValueFallback)
+		public ContentBase(IPublishedContent content, IPublishedValueFallback publishedValueFallback)
 			: base(content, publishedValueFallback)
 		{
 			_publishedValueFallback = publishedValueFallback;
@@ -50,41 +65,29 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
-		/// Side
+		/// Content
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("side")]
-		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel Side => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel>(_publishedValueFallback, "side");
+		[ImplementPropertyType("bodyText")]
+		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel BodyText => GetBodyText(this, _publishedValueFallback);
 
-		///<summary>
-		/// Is Followable
-		///</summary>
+		/// <summary>Static getter for Content</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
-		[ImplementPropertyType("isFollowable")]
-		public virtual bool IsFollowable => global::Umbraco.Cms.Web.Common.PublishedModels.Seo.GetIsFollowable(this, _publishedValueFallback);
+		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		public static global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel GetBodyText(IContentBase that, IPublishedValueFallback publishedValueFallback) => that.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel>(publishedValueFallback, "bodyText");
 
 		///<summary>
-		/// Is Indexable
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
-		[ImplementPropertyType("isIndexable")]
-		public virtual bool IsIndexable => global::Umbraco.Cms.Web.Common.PublishedModels.Seo.GetIsIndexable(this, _publishedValueFallback);
-
-		///<summary>
-		/// Meta Description
+		/// Page Title: The title of the page, this is also the first text in a google search result. The ideal length is between 40 and 60 characters
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("metaDescription")]
-		public virtual string MetaDescription => global::Umbraco.Cms.Web.Common.PublishedModels.Seo.GetMetaDescription(this, _publishedValueFallback);
+		[ImplementPropertyType("pageTitle")]
+		public virtual string PageTitle => GetPageTitle(this, _publishedValueFallback);
 
-		///<summary>
-		/// Meta Title
-		///</summary>
+		/// <summary>Static getter for Page Title</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.4.0+6e3a691")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("metaTitle")]
-		public virtual string MetaTitle => global::Umbraco.Cms.Web.Common.PublishedModels.Seo.GetMetaTitle(this, _publishedValueFallback);
+		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		public static string GetPageTitle(IContentBase that, IPublishedValueFallback publishedValueFallback) => that.Value<string>(publishedValueFallback, "pageTitle");
 	}
 }

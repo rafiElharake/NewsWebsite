@@ -32,7 +32,7 @@ namespace y.Controllers
                 if (parentArticlesNode != null)
                 {
                     // Create a new article under the "Articles" node
-                    var newArticle = _contentService.Create("Article", parentArticlesNode, "article");
+                    var newArticle = _contentService.Create(user.Id, parentArticlesNode, "article");
 
                     // Set properties
                     newArticle.SetValue("title", title);
@@ -54,7 +54,7 @@ namespace y.Controllers
                 var userId = user.Id.ToString();
 
                 // Get the parent "Articles" node (you can use its ID or find it by alias)
-                var parentArticlesNode = _contentService.GetById(1184); 
+                var parentArticlesNode = _contentService.GetById(1184);
 
                 if (parentArticlesNode != null)
                 {
@@ -72,34 +72,8 @@ namespace y.Controllers
                     }
                 }
             }
-
             return Redirect(Request.Headers["Referer"].ToString());
         }
-        public async Task<List<Article>> GetSavedArticlesAsync()
-        {
-            var user = await _memberManager.GetCurrentMemberAsync();
-            if (user != null)
-            {
-                var userId = user.Id.ToString();
-                var parentArticlesNode = _contentService.GetById(1184);
-                if (parentArticlesNode != null)
-                {
-                    var articles = _contentService.GetPagedChildren(parentArticlesNode.Id, 0, 100, out var totalRecords)
-                                    .Where(x => x.ContentType.Alias == "article" &&
-                                                x.GetValue<string>("userId") == userId)
-                                    .Select(x => new Article
-                                    {
-                                        Url = x.GetValue<string>("uri"),
-                                        Title = x.GetValue<string>("title")
-                                    }).ToList();
-
-                    return articles;
-                }
-            }
-
-            return new List<Article>();
-        }
-
         public async Task<string> GetUserIdAsync()
         {
             var user = await _memberManager.GetCurrentMemberAsync();

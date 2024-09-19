@@ -1,4 +1,4 @@
-﻿@model List<Article>
+﻿@model List<y.Models.Article>
 @using y.Models
 @{
     var query = Context.Request.Query["query"].ToString();
@@ -34,8 +34,10 @@
 
                 @* displaying the articles *@
                 <div class="info">
+                    @if (article.PublishedAt != DateTime.MinValue){
                     <span class="date"><span class="month">@article.PublishedAt.ToString("MMM")<span>y</span></span> <span class="day">@article.PublishedAt.Day.ToString()</span></span>
                     <span class="month">@article.PublishedAt.Year.ToString(), @article.PublishedAt.ToString("hh tt")</span>
+                    }
                 </div>
                 <a href="#" class="image featured"><img src="@article.Image" alt="" /></a>
                 <p>@article.Content</p>
@@ -46,7 +48,7 @@
 </ul>
 <div class="pagination">
     <div class="pages">
-        @for (int i = 1; i <= cnt / 2; i++)
+        @for (int i = 1; i <= (int)Math.Ceiling(cnt / 2.0); i++)
         {
             int page;
             if (!int.TryParse(ViewBag.Page as string, out page))
